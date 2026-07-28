@@ -153,7 +153,7 @@ This backlog is derived from the architecture flow in `Plan.md`: developer commi
 
 `Jira_Stories.xlsx` contains one row per issue with Jira-friendly columns. During import:
 
-1. Replace `SECPLAT` in the **Project key** column if the target project uses another key.
+1. Replace **SECPLAT** in the **Project key** column if the target project uses another key.
 2. Map **Epic Name** and **Epic Link** according to the target Jira deployment. Team-managed projects may use **Parent** instead.
 3. Jira Cloud imports CSV natively; if XLSX is not accepted by the installed importer, save the **Jira Import** sheet as CSV before uploading.
 4. Review user names, components, priorities, and required custom fields before completing the import.
