@@ -4,6 +4,8 @@
 > Derived from **SA_Guils_proposal.pptx**  
 > Scope: Development through QA · Staging and Production to follow
 
+![SA Guild Platform Architecture](docs/architecture/SA_Guild_Architecture_Diagram.png)
+
 ---
 
 ## 1. System Context — The Guild Contract
