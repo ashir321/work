@@ -303,8 +303,7 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph L1["LAYER 1 — Experience"]
-        SQUAD["Application Squads"]
-        GUILD["SA Guild Standards"]
+        SQUAD["Application Squad"]
     end
 
     subgraph L2["LAYER 2 — Delivery Pipelines"]
@@ -329,10 +328,8 @@ flowchart TB
         WORKLOAD["Deployments · Services · ConfigMaps"]
     end
 
-    SQUAD --> CI
-    SQUAD --> GITOPS
-    GUILD -.->|"Contract & checklist"| CI
-    GUILD -.->|"Contract & checklist"| GITOPS
+    SQUAD -->|"Push code"| CI
+    SQUAD -->|"Edit chart / values"| GITOPS
 
     CI --> REG_IMG
     GITOPS --> REG_CHART
@@ -348,7 +345,7 @@ flowchart TB
     classDef l4 fill:#3b1f4a,stroke:#a855f7,color:#e2e8f0
     classDef l5 fill:#14532d,stroke:#22c55e,color:#dcfce7
 
-    class SQUAD,GUILD l1
+    class SQUAD l1
     class CI,GITOPS l2
     class REG_IMG,REG_CHART,REG_OCI l3
     class HELM_L,K8S_L l4
