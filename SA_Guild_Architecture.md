@@ -14,7 +14,7 @@ The platform separates **application code** from **environment/configuration**. 
 
 ```mermaid
 flowchart TB
-    subgraph PEOPLE["👥 Squads & Platform"]
+    subgraph PEOPLE["👥 Application Squad"]
         DEV["Developer"]
         DEVOPS["DevOps / Platform Engineer"]
     end
@@ -45,6 +45,7 @@ flowchart TB
     JENKINS -->|"Build image<br/>Push tags"| ECR
     JENKINS -->|"Restart Deployment<br/>(no Git change)"| DEPLOY
 
+    DEV -->|"Edit chart / values"| GITLAB
     DEVOPS -->|"Edit chart / values<br/>Reviewed diff"| GITLAB
     GITLAB -->|"Watch repo<br/>targetRevision: develop"| ARGO
     ARGO --> HELM
@@ -84,7 +85,7 @@ flowchart LR
 
     subgraph CONFIG_PATH["🟣 CONFIG PATH"]
         direction TB
-        G1["Edit chart / values<br/>in GitLab"]
+        G1["Developer / DevOps<br/>edit chart or values"]
         G2["GitLab review + diff"]
         G3["ArgoCD detects drift"]
         G4["Helm render<br/>values-dev.yaml merge"]
@@ -199,7 +200,8 @@ sequenceDiagram
   end
 
   rect rgb(237, 233, 254)
-    Note over DevOps,K8s: CONFIG PATH — GitOps config sync
+    Note over Dev,K8s: CONFIG PATH — GitOps config sync
+    Dev->>GitLab: Edit chart / values / ConfigMap
     DevOps->>GitLab: Edit chart / values / ConfigMap
     GitLab->>GitLab: MR review + approved diff
     Argo->>GitLab: Detect commit drift
