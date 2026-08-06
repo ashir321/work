@@ -53,10 +53,10 @@ flowchart TB
     K8S --> NS
     NS --> DEPLOY
 
-    classDef code fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
-    classDef config fill:#3b1f4a,stroke:#a855f7,color:#e2e8f0
-    classDef runtime fill:#1a3a2a,stroke:#22c55e,color:#e2e8f0
-    classDef people fill:#334155,stroke:#94a3b8,color:#f8fafc
+    classDef code fill:#eff6ff,stroke:#2563eb,color:#1e3a8a
+    classDef config fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95
+    classDef runtime fill:#f0fdf4,stroke:#16a34a,color:#14532d
+    classDef people fill:#f8fafc,stroke:#64748b,color:#0f172a
 
     class DEV,DEVOPS people
     class APP_REPO,JENKINS,ECR code
@@ -95,9 +95,9 @@ flowchart LR
     C5 --> CONVERGE
     G5 --> CONVERGE
 
-    classDef code fill:#1e40af,stroke:#60a5fa,color:#fff
-    classDef config fill:#6b21a8,stroke:#c084fc,color:#fff
-    classDef hub fill:#166534,stroke:#4ade80,color:#fff
+    classDef code fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef config fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    classDef hub fill:#dcfce7,stroke:#16a34a,color:#14532d
 
     class C1,C2,C3,C4,C5 code
     class G1,G2,G3,G4,G5 config
@@ -185,7 +185,7 @@ sequenceDiagram
     participant Argo as ArgoCD
     participant K8s as K8s Deployment
 
-  rect rgb(30, 58, 95)
+  rect rgb(219, 234, 254)
     Note over Dev,K8s: CODE PATH — image rollout without Git change
     Dev->>App: Push application source
     Dev->>Jenkins: Trigger CI build
@@ -196,7 +196,7 @@ sequenceDiagram
     Note over Argo: ArgoCD unchanged — manifest byte-identical
   end
 
-  rect rgb(59, 31, 74)
+  rect rgb(237, 233, 254)
     Note over DevOps,K8s: CONFIG PATH — GitOps config sync
     DevOps->>GitLab: Edit chart / values / ConfigMap
     GitLab->>GitLab: MR review + approved diff
@@ -228,9 +228,9 @@ flowchart TD
 
   ARGO["ArgoCD Application"] -->|"repoURL + path: .<br/>valueFiles: values-dev.yaml"| ROOT
 
-    classDef folder fill:#1e293b,stroke:#6366f1,color:#e2e8f0
-    classDef file fill:#0f172a,stroke:#94a3b8,color:#cbd5e1
-    classDef watcher fill:#312e81,stroke:#818cf8,color:#e2e8f0
+    classDef folder fill:#eef2ff,stroke:#4f46e5,color:#1e1b4b
+    classDef file fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef watcher fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b
 
     class ROOT folder
     class CHART,VALUES,VALUES_DEV,PROPS,DEPLOY_YAML,SVC,CM file
@@ -282,8 +282,8 @@ flowchart LR
 
     PROMOTE -.-> ROLLBACK
 
-    classDef dev fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
-    classDef rel fill:#422006,stroke:#f59e0b,color:#fef3c7
+    classDef dev fill:#eff6ff,stroke:#0284c7,color:#0c4a6e
+    classDef rel fill:#fffbeb,stroke:#d97706,color:#78350f
 
     class RAW,ARGO_DEV,QA dev
     class PKG,OCI,PROMOTE,ROLLBACK rel
@@ -339,11 +339,11 @@ flowchart TB
     REG_OCI -.->|"Release only"| HELM_L
     K8S_L --> WORKLOAD
 
-    classDef l1 fill:#334155,stroke:#cbd5e1,color:#f8fafc
-    classDef l2 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
-    classDef l3 fill:#3b2f1f,stroke:#d97706,color:#fef3c7
-    classDef l4 fill:#3b1f4a,stroke:#a855f7,color:#e2e8f0
-    classDef l5 fill:#14532d,stroke:#22c55e,color:#dcfce7
+    classDef l1 fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef l2 fill:#eff6ff,stroke:#2563eb,color:#1e3a8a
+    classDef l3 fill:#fffbeb,stroke:#d97706,color:#78350f
+    classDef l4 fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95
+    classDef l5 fill:#f0fdf4,stroke:#16a34a,color:#14532d
 
     class SQUAD l1
     class CI,GITOPS l2
