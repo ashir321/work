@@ -1,14 +1,14 @@
-# SA Guild Platform Architecture
+# Platform Delivery Architecture
 ## Shipping with Helm & ArgoCD — Dev → QA
 
 > Derived from **SA_Guils_proposal.pptx**  
 > Scope: Development through QA · Staging and Production to follow
 
-![SA Guild Platform Architecture](docs/architecture/SA_Guild_Architecture_Diagram.png)
+![Platform Delivery Architecture](docs/architecture/SA_Guild_Architecture_Diagram.png)
 
 ---
 
-## 1. System Context — The Guild Contract
+## 1. System Context — Delivery Contract
 
 The platform separates **application code** from **environment/configuration**. Each path has one owner, one trigger, and one convergence point: the **Kubernetes Deployment** in the Dev namespace.
 
@@ -296,7 +296,7 @@ flowchart LR
 2. `helm package ./my-app-deploy`
 3. `helm push my-app-1.0.0.tgz oci://registry/charts`
 
-**Guild principle:** The artefact that passes QA is the artefact promoted to Release — unchanged.
+**Promotion principle:** The artefact that passes QA is the artefact promoted to Release — unchanged.
 
 ---
 
@@ -370,7 +370,7 @@ flowchart TB
 
 ---
 
-## 9. Guild Readiness Checklist
+## 9. Adoption Readiness Checklist
 
 ```mermaid
 flowchart LR
