@@ -28,7 +28,7 @@ flowchart TB
 
     subgraph CONFIG_DOMAIN["CONFIG DOMAIN — ArgoCD owns sync"]
         direction TB
-        GITLAB["GitLab — Helm Chart Repo<br/><i>my-app-deploy</i>"]
+        GITLAB["GitLab — Helm Chart Repo<br/><i>my-app-deploy</i><br/>appVersion editable"]
         ARGO["ArgoCD"]
         HELM["Helm Render Engine"]
     end
@@ -45,7 +45,7 @@ flowchart TB
     JENKINS -->|"Build image<br/>Push tags"| ECR
     JENKINS -->|"Restart Deployment<br/>(no Git change)"| DEPLOY
 
-    DEV -->|"Edit chart / values"| GITLAB
+    DEV -->|"Edit chart / values<br/>appVersion · image tag"| GITLAB
     DEVOPS -->|"Edit chart / values<br/>Reviewed diff"| GITLAB
     GITLAB -->|"Watch repo<br/>targetRevision: develop"| ARGO
     ARGO --> HELM
@@ -85,7 +85,7 @@ flowchart LR
 
     subgraph CONFIG_PATH["🟣 CONFIG PATH"]
         direction TB
-        G1["Developer / DevOps<br/>edit chart or values"]
+        G1["Developer / DevOps<br/>edit chart · appVersion · values"]
         G2["GitLab review + diff"]
         G3["ArgoCD detects drift"]
         G4["Helm render<br/>values-dev.yaml merge"]
@@ -219,7 +219,7 @@ sequenceDiagram
 flowchart TD
     ROOT["my-app-deploy/"]
 
-    ROOT --> CHART["Chart.yaml"]
+    ROOT --> CHART["Chart.yaml<br/>version · appVersion<br/><i>editable in Dev/QA</i>"]
     ROOT --> VALUES["values.yaml"]
     ROOT --> VALUES_DEV["values-dev.yaml<br/><i>Dev overlay</i>"]
     ROOT --> FILES["files/"]
@@ -240,6 +240,38 @@ flowchart TD
     class CHART,VALUES,VALUES_DEV,PROPS,DEPLOY_YAML,SVC,CM file
     class ARGO watcher
 ```
+
+### Editable App Version (Dev/QA)
+
+During Dev and QA, the Helm chart stays as **raw, editable source files** in GitLab — not a packaged `.tgz`. ArgoCD watches `repoURL + path` and renders the chart directly, so version fields can be changed in place and reviewed through a normal Git diff.
+
+| Field | Where | Editable in Dev/QA? | Purpose |
+|-------|-------|---------------------|---------|
+| `appVersion` | `Chart.yaml` | **Yes** | Declares the application release label (metadata + labels) |
+| `version` | `Chart.yaml` | **Yes** | Chart packaging version while iterating in Git |
+| `image.tag` | `values-dev.yaml` | **Yes** | Pin or override the container image tag for the environment |
+| Packaged chart | OCI registry | **No** (post-QA) | Immutable artefact promoted unchanged after QA |
+
+**Example — editable fields in Dev/QA**
+
+```yaml
+# Chart.yaml — appVersion is editable; bump here for config-path releases
+apiVersion: v2
+name: my-app
+description: SA Guild sample deploy chart
+type: application
+version: 0.3.0        # chart version — editable during iteration
+appVersion: "2.4.1"   # app version — editable in Dev/QA raw chart
+```
+
+```yaml
+# values-dev.yaml — image tag override (config path)
+image:
+  repository: 123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app
+  tag: "2.4.1"        # editable — ArgoCD sync applies on merge
+```
+
+**Boundary:** The **code path** refreshes running pods via Jenkins rollout restart without a Git change. The **config path** owns `appVersion`, chart `version`, and values overlays — including image tag when declared in Git.
 
 ### ArgoCD Application Contract (Minimum Wiring)
 
@@ -267,7 +299,7 @@ syncPolicy:
 ```mermaid
 flowchart LR
     subgraph DEV_QA["DEV / QA — Flexible iteration"]
-        RAW["Raw Helm chart<br/>in GitLab"]
+        RAW["Raw Helm chart<br/>appVersion editable"]
         ARGO_DEV["ArgoCD watches<br/>editable source"]
         QA["QA validation"]
         RAW --> ARGO_DEV --> QA
@@ -367,7 +399,7 @@ flowchart TB
 | **No automation collision** | `selfHeal: false` on ArgoCD Application |
 | **Traceable releases** | Versioned charts · commit backup tags |
 | **Safe rollback** | Revert chart version pointer (config) or previous image tag (code) |
-| **Dev/QA flexibility** | Raw editable charts watched by ArgoCD |
+| **Dev/QA flexibility** | Raw editable charts — `appVersion` and values in GitLab |
 | **Release immutability** | Package to `.tgz` → push to OCI only after QA pass |
 
 ---
