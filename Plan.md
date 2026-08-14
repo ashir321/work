@@ -24,3 +24,4 @@ K --> N[Monitoring - Prometheus]
 N --> O[Grafana Dashboards]
 
 K --> P[Runtime Security Policies]
+```
