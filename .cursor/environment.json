@@ -1,0 +1,4 @@
+{
+  "name": "work-docs",
+  "install": "PUPPETEER_SKIP_DOWNLOAD=1 npm install"
+}

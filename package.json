@@ -1,0 +1,17 @@
+{
+  "name": "work-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Documentation and architecture diagrams. Tooling to lint Markdown and render Mermaid diagrams.",
+  "scripts": {
+    "lint": "markdownlint \"**/*.md\" --ignore node_modules --ignore dist",
+    "lint:fix": "markdownlint \"**/*.md\" --ignore node_modules --ignore dist --fix",
+    "diagram": "mkdir -p dist && mmdc --puppeteerConfigFile puppeteer-config.json -i Plan.md -o dist/Plan.md",
+    "diagram:png": "mkdir -p dist && mmdc --puppeteerConfigFile puppeteer-config.json -i Plan.md -o dist/plan-diagram.png",
+    "build": "npm run lint && npm run diagram"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.16.0",
+    "markdownlint-cli": "0.49.1"
+  }
+}
