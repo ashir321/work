@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smb-mount-demo
+  namespace: default
+  labels:
+    app: smb-mount-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smb-mount-demo
+  template:
+    metadata:
+      labels:
+        app: smb-mount-demo
+    spec:
+      containers:
+        - name: app
+          image: public.ecr.aws/docker/library/busybox:1.36
+          command:
+            - sh
+            - -c
+            - while true; do date >> /data/heartbeat.txt; sleep 60; done
+          volumeMounts:
+            - name: smb-vol
+              mountPath: /data
+      volumes:
+        - name: smb-vol
+          persistentVolumeClaim:
+            claimName: smb-data

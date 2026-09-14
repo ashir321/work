@@ -1,0 +1,55 @@
+# Optional: install cifs-utils on EKS worker nodes (Amazon Linux 2 style).
+# Prefer baking cifs-utils into the node AMI or custom launch template for production.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-prep-cifs-utils
+  namespace: kube-system
+  labels:
+    app: node-prep-cifs-utils
+spec:
+  selector:
+    matchLabels:
+      app: node-prep-cifs-utils
+  template:
+    metadata:
+      labels:
+        app: node-prep-cifs-utils
+    spec:
+      hostPID: true
+      hostNetwork: true
+      tolerations:
+        - operator: Exists
+      initContainers:
+        - name: install-cifs-utils
+          image: public.ecr.aws/amazonlinux/amazonlinux:2
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              chroot /host bash -ec '
+                if command -v yum >/dev/null 2>&1; then
+                  yum install -y cifs-utils
+                elif command -v dnf >/dev/null 2>&1; then
+                  dnf install -y cifs-utils
+                else
+                  echo "No yum/dnf on host; install cifs-utils via your node image" >&2
+                  exit 1
+                fi
+              '
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: host-root
+              mountPath: /host
+      containers:
+        - name: pause
+          image: public.ecr.aws/eks-distro/kubernetes/pause:3.9
+          resources:
+            requests:
+              cpu: 1m
+              memory: 8Mi
+      volumes:
+        - name: host-root
+          hostPath:
+            path: /

@@ -24,4 +24,8 @@ K --> N[Monitoring - Prometheus]
 N --> O[Grafana Dashboards]
 
 K --> P[Runtime Security Policies]
+
+K --> Q[SMB/CIFS Storage - CSI Driver]
+Q --> R[Shared PVCs - ReadWriteMany]
+R --> S[Workloads on EKS]
 ```
